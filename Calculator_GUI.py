@@ -1,35 +1,30 @@
 # Importing the necessary modules
 from tkinter import *
-import parser
 from math import factorial
 
 root = Tk()
 root.geometry('500x400')
 root.title('Standard Calculator')
 
-# It keeps the track of current position on the input text field
+# It keeps track of the current position on the input text field
 i = 0
 
-
-# Receives the digit as parameter and display it on the input field
+# Receives the digit as a parameter and displays it on the input field
 def get_variables(num):
     global i
     screen.insert(i, num)
     i += 1
 
-
-# Calculate function scans the string to evaluates and display it
+# Calculate function scans the string to evaluate and display it
 def calculate():
     entire_string = screen.get()
     try:
-        a = parser.expr(entire_string).compile()
-        result = eval(a)
+        result = eval(entire_string)
         clear_all()
         screen.insert(0, result)
     except Exception:
         clear_all()
         screen.insert(0, "Error")
-
 
 # Function which takes operator as input and displays it on the input field
 def get_operation(operator):
@@ -38,11 +33,9 @@ def get_operation(operator):
     screen.insert(i, operator)
     i += length
 
-
 # Function to clear the input field
 def clear_all():
     screen.delete(0, END)
-
 
 # Function which works like backspace
 def undo():
@@ -55,7 +48,6 @@ def undo():
         clear_all()
         screen.insert(0, "Error")
 
-
 # Function to calculate the factorial and display it
 def fact():
     entire_string = screen.get()
@@ -67,62 +59,35 @@ def fact():
         clear_all()
         screen.insert(0, "Error")
 
-
 # --------------------------------------UI Design ---------------------------------------------
 
-# Set Columnconfigure & Rowconfigure for resize
-Grid.rowconfigure(root, 0, weight=1)
-Grid.columnconfigure(root, 0, weight=1)
-Grid.rowconfigure(root, 1, weight=1)
-Grid.columnconfigure(root, 1, weight=1)
-Grid.rowconfigure(root, 2, weight=1)
-Grid.columnconfigure(root, 2, weight=1)
-Grid.rowconfigure(root, 3, weight=1)
-Grid.columnconfigure(root, 3, weight=1)
-Grid.rowconfigure(root, 4, weight=1)
-Grid.columnconfigure(root, 4, weight=1)
-Grid.rowconfigure(root, 5, weight=1)
-Grid.columnconfigure(root, 5, weight=1)
-Grid.rowconfigure(root, 6, weight=1)
-
-# adding the input field
+# Adding the input field
 screen = Entry(root)
 screen.grid(row=1, columnspan=6, sticky="NSEW")
 
-# Code to add buttons to the Calculator
-Button(root, text="1", command=lambda: get_variables(1)).grid(row=2, column=0, sticky="NSEW")
-Button(root, text="2", command=lambda: get_variables(2)).grid(row=2, column=1, sticky="NSEW")
-Button(root, text="3", command=lambda: get_variables(3)).grid(row=2, column=2, sticky="NSEW")
+# Number buttons
+buttons = [
+    ('1', 2, 0), ('2', 2, 1), ('3', 2, 2),
+    ('4', 3, 0), ('5', 3, 1), ('6', 3, 2),
+    ('7', 4, 0), ('8', 4, 1), ('9', 4, 2),
+    ('0', 5, 1), ('.', 5, 2)
+]
+for (text, row, col) in buttons:
+    Button(root, text=text, command=lambda t=text: get_variables(t)).grid(row=row, column=col, sticky="NSEW")
 
-Button(root, text="4", command=lambda: get_variables(4)).grid(row=3, column=0, sticky="NSEW")
-Button(root, text=" 5", command=lambda: get_variables(5)).grid(row=3, column=1, sticky="NSEW")
-Button(root, text=" 6", command=lambda: get_variables(6)).grid(row=3, column=2, sticky="NSEW")
+# Operator buttons
+operations = [
+    ('+', 2, 3), ('-', 3, 3), ('*', 4, 3), ('/', 5, 3),
+    ('pi', 2, 4, '*3.14'), ('%', 3, 4), ('(', 4, 4), ('exp', 5, 4, '**'),
+    ('<-', 2, 5, 'undo'), ('x!', 3, 5, 'fact'), (')', 4, 5), ('^2', 5, 5, '**2')
+]
+for op in operations:
+    text, row, col = op[:3]
+    command = get_operation if len(op) == 3 else (undo if op[3] == 'undo' else fact)
+    Button(root, text=text, command=lambda t=text: command(t) if command != undo and command != fact else command()).grid(row=row, column=col, sticky="NSEW")
 
-Button(root, text="7", command=lambda: get_variables(7)).grid(row=4, column=0, sticky="NSEW")
-Button(root, text=" 8", command=lambda: get_variables(8)).grid(row=4, column=1, sticky="NSEW")
-Button(root, text=" 9", command=lambda: get_variables(9)).grid(row=4, column=2, sticky="NSEW")
-
-# adding other buttons to the calculator
-Button(root, text="AC", command=lambda: clear_all()).grid(row=5, column=0, sticky="NSEW")
-Button(root, text=" 0", command=lambda: get_variables(0)).grid(row=5, column=1, sticky="NSEW")
-Button(root, text=" .", command=lambda: get_variables(".")).grid(row=5, column=2, sticky="NSEW")
-
-Button(root, text="+", command=lambda: get_operation("+")).grid(row=2, column=3, sticky="NSEW")
-Button(root, text="-", command=lambda: get_operation("-")).grid(row=3, column=3, sticky="NSEW")
-Button(root, text="*", command=lambda: get_operation("*")).grid(row=4, column=3, sticky="NSEW")
-Button(root, text="/", command=lambda: get_operation("/")).grid(row=5, column=3, sticky="NSEW")
-
-# adding new operations
-Button(root, text="pi", command=lambda: get_operation("*3.14")).grid(row=2, column=4, sticky="NSEW")
-Button(root, text="%", command=lambda: get_operation("%")).grid(row=3, column=4, sticky="NSEW")
-Button(root, text="(", command=lambda: get_operation("(")).grid(row=4, column=4, sticky="NSEW")
-Button(root, text="exp", command=lambda: get_operation("**")).grid(row=5, column=4, sticky="NSEW")
-
-Button(root, text="<-", command=lambda: undo()).grid(row=2, column=5, sticky="NSEW")
-Button(root, text="x!", command=lambda: fact()).grid(row=3, column=5, sticky="NSEW")
-Button(root, text=")", command=lambda: get_operation(")")).grid(row=4, column=5, sticky="NSEW")
-Button(root, text="^2", command=lambda: get_operation("**2")).grid(row=5, column=5, sticky="NSEW")
-Button(root, text="^2", command=lambda: get_operation("**2")).grid(row=5, column=5, sticky="NSEW")
-Button(root, text="=", command=lambda: calculate()).grid(columnspan=6, sticky="NSEW")
+# Special buttons
+Button(root, text="AC", command=clear_all).grid(row=5, column=0, sticky="NSEW")
+Button(root, text="=", command=calculate).grid(columnspan=6, sticky="NSEW")
 
 root.mainloop()
