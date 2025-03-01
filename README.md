@@ -12,8 +12,8 @@ This is a **Graphical User Interface (GUI) Calculator** built using Python's **T
 ## 🚀 Installation & Usage
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/husseini2000/gui-calculator.git
-cd gui-calculator
+git clone https://github.com/husseini2000/Simple-Calculater-Desktop-App.git
+cd Simple-Calculater-Desktop-App
 ```
 ### 2️⃣ Install Dependencies
 Ensure you have Python installed (Python 3 recommended).
@@ -24,11 +24,11 @@ pip install tk
 
 ### 3️⃣ Run the Application
 ```bash
-python calculator.py
+python Calculator_GUI.py
 ```
 
 ## 📝 Code Structure
-- **`calculator.py`** → Main script containing the GUI and logic.
+- **`Calculator_GUI.py`** → Main script containing the GUI and logic.
 
 ## 🖼 Screenshot
 ![Calculator GUI](screenshot.png)
